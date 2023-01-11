@@ -129,7 +129,7 @@ namespace HotelExtrados
                         break;
                     case 2:
                         Console.WriteLine("Has elegido la opción 2");
-                        //llamamos a la funcion que va a cambiar el estado de un cuarto
+                        updateLimpiezaOrRenovacion();
                         break;
                     case 3:
                         Console.WriteLine("Has elegido la opción 3");
@@ -364,8 +364,16 @@ namespace HotelExtrados
             nueva.Check_in = Convert.ToDateTime(Console.ReadLine());
             Console.WriteLine("Ingrese la fecha de salida");
             nueva.Check_out = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine("Ingrese el estado de la reserva: ACTIVA - INACTIVA");
+            nueva.Estado = Console.ReadLine();
+
 
             controller.agregarReserva(nueva);
+
+           
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Reserva realizada con exito");
+            Console.ForegroundColor = ConsoleColor.Gray;
 
         }
 
@@ -505,6 +513,37 @@ namespace HotelExtrados
 
 
             }
+        }
+
+        public static void updateLimpiezaOrRenovacion()
+        {
+            HabitacionController controller = new HabitacionController();
+
+            Habitacion habitacion = new Habitacion();
+
+            Console.WriteLine("Ingrese el Nro de habitacion que desea modificar el estado");
+            habitacion.Nro_Habitacion = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Ingrese 1 si desea poner la habitacion en estado de Limpieza");
+            Console.WriteLine("Ingrese 2 si desea poner la habitacion en estado de Renovacion");
+            int estadoNuevo = Convert.ToInt32(Console.ReadLine());
+
+            if(estadoNuevo == 1)
+            {
+                controller.estadoALimpieza(habitacion);
+            }
+            else if(estadoNuevo == 2)
+            {
+                controller.estadoARenovacion(habitacion);
+            }
+            else
+            {
+                Console.WriteLine("Opcion ingresada no valida");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("MODIFICACION EXITOSA");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
 

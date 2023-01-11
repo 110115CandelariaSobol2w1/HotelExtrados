@@ -14,6 +14,8 @@ namespace HotelExtrados.Controlador
     public class ClienteController
     {
         private string cadenaConexion = ConfigurationManager.ConnectionStrings["MyDbConnection"].ToString();
+       
+        //APP PUNTO 3
         public int agregarCliente(Cliente cliente)
         {
 

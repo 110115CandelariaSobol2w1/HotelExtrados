@@ -16,6 +16,7 @@ namespace HotelExtrados.Controlador
     {
         private string cadenaConexion = ConfigurationManager.ConnectionStrings["MyDbConnection"].ToString();
 
+        //APP PUNTO 1
         public IEnumerable<Habitacion> obtenerHabitacionesNormales()
         {
 
@@ -34,7 +35,7 @@ namespace HotelExtrados.Controlador
 
 
         }
-
+        
         public IEnumerable<Habitacion> obtenerHabitacionesVip()
         {
 
@@ -53,7 +54,7 @@ namespace HotelExtrados.Controlador
 
 
         }
-
+        //APP PUNTO 2
         public IEnumerable<Habitacion> obtenerHabitacionesVipDesocupadas()
         {
 
@@ -92,6 +93,7 @@ namespace HotelExtrados.Controlador
 
         }
 
+        //ADMIN PUNTO 1
         public int agregarHabitacion(Habitacion habitacion)
         {
 
@@ -107,6 +109,7 @@ namespace HotelExtrados.Controlador
             }
         }
 
+        //APP PUNTO 5
         public IEnumerable<habitacionesDTO> obtenerHabitacionesDesocupadasLimpieza()
         {
             string query = "select Nro_habitacion, h.IdEstado, e.Descripcion " +
@@ -144,6 +147,7 @@ namespace HotelExtrados.Controlador
             }
         }
 
+        //ADMIN PUNTO 4
         public IEnumerable<habitacionesDTO> obtenerHabitacionesRenovacion()
         {
             string query = "select Nro_habitacion, h.IdEstado, e.Descripcion " +
@@ -181,5 +185,51 @@ namespace HotelExtrados.Controlador
 
             }
         }
+
+        //ADMIN PUNTO 3
+
+        public int estadoALimpieza(Habitacion habitacion)
+        {
+            string query = "update Habitaciones set IdEstado = CASE IdEstado " +
+                "when 1 then 3 " +
+                "when 2 then 3 " +
+                "when 3 then 3 " +
+                "when 4 then 3 " +
+                "end " +
+                "where Nro_Habitacion = @Nro_Habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion });
+
+                return estadoNuevo;
+
+            }
+        }
+
+        public int estadoARenovacion(Habitacion habitacion)
+        {
+            string query = "update Habitaciones set IdEstado = CASE IdEstado " +
+                "when 1 then 4 " +
+                "when 2 then 4 " +
+                "when 3 then 4 " +
+                "when 4 then 4 " +
+                "end " +
+                "where Nro_Habitacion = @Nro_Habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion });
+
+                return estadoNuevo;
+
+            }
+        }
+
+
     }
 }
