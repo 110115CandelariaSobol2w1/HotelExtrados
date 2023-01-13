@@ -74,6 +74,7 @@ namespace HotelExtrados
                     case 1:
                         Console.WriteLine("Has elegido la opción 1");
                         getHabitaciones();
+                        
 
                         break;
                     case 2:
@@ -153,6 +154,9 @@ namespace HotelExtrados
         public static void getHabitaciones()
         {
             HabitacionController habController = new HabitacionController();
+            ReservaClienteDTO reservaClienteDTO = new ReservaClienteDTO();
+            ReservaController controller = new ReservaController();
+           // Reserva reserva = new ReservaController();
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Habitaciones comunes");
@@ -191,6 +195,14 @@ namespace HotelExtrados
                 else
                 {
                     Console.WriteLine("Desayuno: No incluido");
+                }
+
+                if(habitacion.idEstado == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                   // int checkout = controller.obtenerCheckout(reserva.Nro_habitacion);
+                    Console.WriteLine("La habitacion se encuenta ocupada hasta el dia {0}");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
 
                 Console.WriteLine("----------------------------------------------");
@@ -241,6 +253,7 @@ namespace HotelExtrados
 
 
         }
+
 
         public static void getHabitacionesDesocupadas()
         {
@@ -340,40 +353,77 @@ namespace HotelExtrados
             ClienteController controller = new ClienteController();
 
             Console.WriteLine("Ingrese el DNI del cliente");
-            nuevo.Dni = Int64.Parse(Console.ReadLine());
-            Console.WriteLine("Ingrese el nombre del cliente");
-            nuevo.Nombre = Console.ReadLine();
-            Console.WriteLine("Ingrese el apellido del cliente");
-            nuevo.Apellido = Console.ReadLine();
-            Console.WriteLine("Ingrese el email del cliente");
-            nuevo.Email = Console.ReadLine();
+            long dni = Convert.ToInt64(Console.ReadLine());
+            nuevo.Dni = dni;
 
-            controller.agregarCliente(nuevo);
+            bool clienteReserva = controller.verificarCliente(dni);
+            if (clienteReserva)
+            {
+                Console.WriteLine("El cliente con el dni {0} ya se encuentra registrado", dni);
+            }
+            else
+            {
+                Console.WriteLine("Ingrese el nombre del cliente");
+                nuevo.Nombre = Console.ReadLine();
+                Console.WriteLine("Ingrese el apellido del cliente");
+                nuevo.Apellido = Console.ReadLine();
+                Console.WriteLine("Ingrese el email del cliente");
+                nuevo.Email = Console.ReadLine();
+
+                controller.agregarCliente(nuevo);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Cliente registrado con exito!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            
         }
 
         public static void agregarReserva()
         {
             Reserva nueva = new Reserva();
             ReservaController  controller = new ReservaController();
+            ClienteController controllerCliente = new ClienteController();
 
             Console.WriteLine("Ingrese el numero de habitacion");
-            nueva.Nro_habitacion = Convert.ToInt32(Console.ReadLine());
+            int nroHabitacion = Convert.ToInt32(Console.ReadLine());
+            nueva.Nro_habitacion = nroHabitacion;
             Console.WriteLine("Ingrese el DNI del cliente");
-            nueva.Dni_cliente = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Ingrese la fecha de ingreso");
-            nueva.Check_in = Convert.ToDateTime(Console.ReadLine());
-            Console.WriteLine("Ingrese la fecha de salida");
-            nueva.Check_out = Convert.ToDateTime(Console.ReadLine());
-            Console.WriteLine("Ingrese el estado de la reserva: ACTIVA - INACTIVA");
-            nueva.Estado = Console.ReadLine();
+            long dniReserva = Convert.ToInt64(Console.ReadLine());
+            nueva.Dni_cliente = dniReserva;
 
+            //Deberia verificar si el cliente esta cargado, y si no ir al menu de carga
+            bool clienteReserva = controllerCliente.verificarCliente(dniReserva);
+            if (clienteReserva)
+            {
 
-            controller.agregarReserva(nueva);
+                Console.WriteLine("Ingrese la fecha de ingreso");
+                nueva.Check_in = Convert.ToDateTime(Console.ReadLine());
+                Console.WriteLine("Ingrese la fecha de salida");
+                nueva.Check_out = Convert.ToDateTime(Console.ReadLine());
+
+                nueva.Estado = 1;
+
+                controller.agregarReserva(nueva);
+
+                //Update para cambiar el estado de la habitacion en la tabla habitaciones
+                controller.CambiarEstadoHabitacion(nroHabitacion);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Reserva realizada con exito");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+
+            else
+            {
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("ERROR. Cliente no encontrado!!. Primero debe registrar al cliente");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                menuApp();
+            }
 
            
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Reserva realizada con exito");
-            Console.ForegroundColor = ConsoleColor.Gray;
 
         }
 
@@ -443,6 +493,10 @@ namespace HotelExtrados
 
             controller.agregarHabitacion(nueva);
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Habitacion registrada con exito!");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
         }
 
         public static void getHabitacionesDesocupadasLimpieza()
@@ -500,7 +554,7 @@ namespace HotelExtrados
             nueva.Nro_Habitacion = Convert.ToInt32(Console.ReadLine());
             controller.RenovacionADisponible(nueva);
 
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("MODIFICACION EXITOSA");
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -521,29 +575,52 @@ namespace HotelExtrados
 
             Habitacion habitacion = new Habitacion();
 
+            Reserva reserva = new Reserva();
+
             Console.WriteLine("Ingrese el Nro de habitacion que desea modificar el estado");
-            habitacion.Nro_Habitacion = Convert.ToInt32(Console.ReadLine());
+            int nroHabitacion = Convert.ToInt32(Console.ReadLine());
+            habitacion.Nro_Habitacion = nroHabitacion;
+            reserva.Nro_habitacion = nroHabitacion;
+
 
             Console.WriteLine("Ingrese 1 si desea poner la habitacion en estado de Limpieza");
             Console.WriteLine("Ingrese 2 si desea poner la habitacion en estado de Renovacion");
+
             int estadoNuevo = Convert.ToInt32(Console.ReadLine());
 
-            if(estadoNuevo == 1)
+            if (estadoNuevo == 1)
             {
                 controller.estadoALimpieza(habitacion);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("MODIFICACION EXITOSA");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
-            else if(estadoNuevo == 2)
+            else if (estadoNuevo == 2 && reserva.Estado == 0)
             {
                 controller.estadoARenovacion(habitacion);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("MODIFICACION EXITOSA");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else if(estadoNuevo == 2 && reserva.Estado == 1)
+            {
+                controller.estadoARenovacion(habitacion);
+                controller.cancelarReserva(reserva);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("MODIFICACION EXITOSA. RESERVA CANCELADA POR REMODELACIONES");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Opcion ingresada no valida");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("MODIFICACION EXITOSA");
-            Console.ForegroundColor = ConsoleColor.Gray;
+           
         }
 
 

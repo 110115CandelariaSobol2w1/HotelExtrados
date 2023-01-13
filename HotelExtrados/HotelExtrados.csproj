@@ -70,6 +70,7 @@
     <Compile Include="Controlador\ReservaController.cs" />
     <Compile Include="Controlador\UsuarioController.cs" />
     <Compile Include="DTO\habitacionesDTO.cs" />
+    <Compile Include="DTO\ReservaClienteDTO.cs" />
     <Compile Include="Modelo\Cliente.cs" />
     <Compile Include="Modelo\EstadoHabitacion.cs" />
     <Compile Include="Modelo\Habitacion.cs" />

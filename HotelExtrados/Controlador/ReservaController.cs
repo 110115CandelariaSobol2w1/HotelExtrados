@@ -30,5 +30,38 @@ namespace HotelExtrados.Controlador
 
             }
         }
+
+        public int CambiarEstadoHabitacion(int Nro_habitacion)
+        {
+            string query = "update Habitaciones set IdEstado = CASE IdEstado" +
+                " when 1 then 2 " +
+                "when 2 then 2 " +
+                "when 3 then 2 " +
+                "when 4 then 2 " +
+                "else null " +
+                "end " +
+                "where Nro_habitacion = @Nro_Habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = Nro_habitacion});
+
+                return estadoNuevo;
+
+            }
+        }
+
+        //public int obtenerCheckout(int Nro_habitacion)
+        //{
+
+        //    string query = "select Check_out from Reserva where Nro_habitacion = @Nro_habitacion";
+        //    using (var connection = new SqlConnection(cadenaConexion))
+        //    {
+        //        var results = connection.Query<Reserva>(query, new { Nro_habitacion = Nro_habitacion });
+        //        return results;
+        //    }
+        //}
     }
 }

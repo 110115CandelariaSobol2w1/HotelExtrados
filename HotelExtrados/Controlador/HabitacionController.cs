@@ -20,7 +20,7 @@ namespace HotelExtrados.Controlador
         public IEnumerable<Habitacion> obtenerHabitacionesNormales()
         {
 
-            string query = "select nro_habitacion, cant_camas, cochera, precio, television, desayuno" +
+            string query = "select nro_habitacion, cant_camas, cochera, precio, television, desayuno, IdEstado" +
                 " from habitaciones where idTipo = 1 ";
 
 
@@ -35,7 +35,28 @@ namespace HotelExtrados.Controlador
 
 
         }
-        
+
+        //OBTENER HABITACION Y CLIENTES
+        public IEnumerable<ReservaClienteDTO> obtenerHabitacionesNormalesYClientes()
+        {
+
+            string query = "select h.IdEstado, r.Check_out " +
+                "from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion " +
+                "where idTipo = 1";
+
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+                var habitacionesComunes = db.Query<ReservaClienteDTO>(query).ToList();
+
+
+                return habitacionesComunes;
+            }
+
+
+        }
+
         public IEnumerable<Habitacion> obtenerHabitacionesVip()
         {
 
@@ -230,6 +251,34 @@ namespace HotelExtrados.Controlador
             }
         }
 
+        public int cancelarReserva(Reserva reserva)
+        {
+            string query = "update Reserva set Estado = CASE Estado " +
+                "when 1 then 0 " +
+                "when 0 then 0 " +
+                "end " +
+                "where Nro_Habitacion = @Nro_Habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = reserva.Nro_habitacion});
+
+                return estadoNuevo;
+
+            }
+        }
+
+        public int ObtenerEstadoHabitacion(Habitacion habitacion)
+        {
+            using (IDbConnection conexion = new SqlConnection(cadenaConexion))
+            {
+                conexion.Open();
+                var dias = conexion.QueryFirstOrDefault<int>("select IdEstado from Habitaciones where Nro_habitacion = @Nro_habitacion", new { id_habitacion = habitacion.Nro_Habitacion});
+                return dias;
+            }
+        }
 
     }
 }

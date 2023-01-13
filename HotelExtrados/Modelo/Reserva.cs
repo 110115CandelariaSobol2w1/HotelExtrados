@@ -13,7 +13,7 @@ namespace HotelExtrados.Modelo
         public long Dni_cliente { get; set; }
         public DateTime Check_in { get; set; }
         public DateTime Check_out { get; set; }  
-        public string Estado { get; set; }
+        public int Estado { get; set; }
 
 
 
