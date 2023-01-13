@@ -433,69 +433,79 @@ namespace HotelExtrados
             Habitacion nueva = new Habitacion();
 
             Console.WriteLine("Ingrese el numero de habitacion");
-            nueva.Nro_Habitacion = Convert.ToInt32(Console.ReadLine());
+            int nroHabitacion = Convert.ToInt32(Console.ReadLine());
+            nueva.Nro_Habitacion = nroHabitacion;
+            bool habitacionNueva = controller.verificarHabitacion(nroHabitacion);
+            if (habitacionNueva)
+            {
+                Console.WriteLine("La habitacion numero {0} ya se encuentra registrada", nroHabitacion);
+            }
+            else
+            {
+                Console.WriteLine("Ingrese el tipo de habitacion:");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Comun: 1  VIP: 2");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.idTipo = Convert.ToInt32(Console.ReadLine());
 
 
-            Console.WriteLine("Ingrese el tipo de habitacion:");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Comun: 1  VIP: 2");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.idTipo = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Ingrese la cantidad de camas");
+                nueva.cant_camas = Convert.ToInt32(Console.ReadLine());
+
+                Console.WriteLine("Posee cochera?");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.Cochera = Convert.ToBoolean(Console.ReadLine());
 
 
-            Console.WriteLine("Ingrese la cantidad de camas");
-            nueva.cant_camas = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Posee cochera?");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.Cochera = Convert.ToBoolean(Console.ReadLine());
+                Console.WriteLine("Ingrese el precio por noche");
+                nueva.precio = Convert.ToInt32(Console.ReadLine());
 
 
-            Console.WriteLine("Ingrese el precio por noche");
-            nueva.precio = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Posee televisor?");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.television = Convert.ToBoolean(Console.ReadLine());
 
 
-            Console.WriteLine("Posee televisor?");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.television = Convert.ToBoolean(Console.ReadLine());
+                Console.WriteLine("Incluye desayuno?");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.Desayuno = Convert.ToBoolean(Console.ReadLine());
 
 
-            Console.WriteLine("Incluye desayuno?");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.Desayuno = Convert.ToBoolean(Console.ReadLine());
+                Console.WriteLine("Posee servicio al cuarto?");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.Servicio = Convert.ToBoolean(Console.ReadLine());
 
 
-            Console.WriteLine("Posee servicio al cuarto?");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.Servicio = Convert.ToBoolean(Console.ReadLine());
+                Console.WriteLine("Posee hidromasajes?");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                nueva.Hidromasaje = Convert.ToBoolean(Console.ReadLine());
+
+                Console.WriteLine("Ingrese estado del cuarto");
+                Console.WriteLine("Disponible: 1");
+                Console.WriteLine("Ocupado: 2");
+                Console.WriteLine("Limpieza: 3");
+                Console.WriteLine("Renovacion: 4");
+                nueva.idEstado = Convert.ToInt32(Console.ReadLine());
+
+                controller.agregarHabitacion(nueva);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Habitacion registrada con exito!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
 
 
-            Console.WriteLine("Posee hidromasajes?");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Si tiene: TRUE   -   Si no tiene: FALSE");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            nueva.Hidromasaje = Convert.ToBoolean(Console.ReadLine());
-
-            Console.WriteLine("Ingrese estado del cuarto");
-            Console.WriteLine("Disponible: 1");
-            Console.WriteLine("Ocupado: 2");
-            Console.WriteLine("Limpieza: 3");
-            Console.WriteLine("Renovacion: 4");
-            nueva.idEstado = Convert.ToInt32(Console.ReadLine());
-
-            controller.agregarHabitacion(nueva);
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Habitacion registrada con exito!");
-            Console.ForegroundColor = ConsoleColor.Gray;
+            
 
         }
 

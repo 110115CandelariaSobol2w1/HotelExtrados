@@ -280,5 +280,27 @@ namespace HotelExtrados.Controlador
             }
         }
 
+        //VERIFICAMOS QUE NO EXISTA EL NUMERO DE CUARTO QUE VAMOS A REGISTRAR
+
+        public bool verificarHabitacion(int Nro_habitacion)
+        {
+            using (var connection = new SqlConnection(cadenaConexion))
+            {
+                string query = "select count(*) from Habitaciones where Nro_habitacion = @Nro_habitacion";
+
+
+                var count = connection.ExecuteScalar<int>(query, new { Nro_habitacion = Nro_habitacion });
+
+                if (count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
     }
 }
