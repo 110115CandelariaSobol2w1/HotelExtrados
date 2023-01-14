@@ -53,15 +53,28 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //public int obtenerCheckout(int Nro_habitacion)
+        //Mostramos las habitaciones disponibles para las fechas seleccionadas.
+
+        //public IEnumerable<Habitacion> obtenerHabitacionesDesocupadasFecha()
         //{
 
-        //    string query = "select Check_out from Reserva where Nro_habitacion = @Nro_habitacion";
-        //    using (var connection = new SqlConnection(cadenaConexion))
+        //    string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje " +
+        //        "from Habitaciones where IdTipo = 2 and IdEstado = 1";
+
+
+        //    using (IDbConnection db = new SqlConnection(cadenaConexion))
         //    {
-        //        var results = connection.Query<Reserva>(query, new { Nro_habitacion = Nro_habitacion });
-        //        return results;
+        //        db.Open();
+        //        var habitacionesVip = db.Query<Habitacion>(query).ToList();
+
+
+        //        return habitacionesVip;
         //    }
+
+
         //}
+
+
+
     }
 }

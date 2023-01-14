@@ -57,7 +57,7 @@ namespace HotelExtrados
             while (!salir)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("BIENVENIDO AL PANEL DE ADMINISTRADOR");
+                Console.WriteLine("BIENVENIDO AL PANEL ATENCION AL PUBLICO");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("1. Ingrese 1 para ver el listado de todos los cuartos");
                 Console.WriteLine("2. Ingrese 2 para ver el listado de cuartos disponibles");
@@ -111,7 +111,7 @@ namespace HotelExtrados
             while (!salir)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("BIENVENIDO AL PANEL DE APP");
+                Console.WriteLine("BIENVENIDO AL PANEL DE ADMINISTRADOR");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("1. Ingrese 1 para agregar un nuevo cuarto");
                 Console.WriteLine("2. Ingrese 2 para cambiar el estado de un cuarto");
@@ -154,9 +154,6 @@ namespace HotelExtrados
         public static void getHabitaciones()
         {
             HabitacionController habController = new HabitacionController();
-            ReservaClienteDTO reservaClienteDTO = new ReservaClienteDTO();
-            ReservaController controller = new ReservaController();
-           // Reserva reserva = new ReservaController();
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Habitaciones comunes");
@@ -200,8 +197,8 @@ namespace HotelExtrados
                 if(habitacion.idEstado == 2)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                   // int checkout = controller.obtenerCheckout(reserva.Nro_habitacion);
-                    Console.WriteLine("La habitacion se encuenta ocupada hasta el dia {0}");
+                    DateTime checkOut = habController.obtenerCheckOut(habitacion.Nro_Habitacion);
+                    Console.WriteLine("La habitacion se encuenta ocupada hasta el dia {0}", checkOut);
                     Console.ForegroundColor = ConsoleColor.Gray;
                 }
 

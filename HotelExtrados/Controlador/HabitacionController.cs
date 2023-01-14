@@ -36,6 +36,17 @@ namespace HotelExtrados.Controlador
 
         }
 
+        public DateTime obtenerCheckOut(int Nro_habitacion)
+        {
+            string query = "select Check_out from Reserva where Nro_habitacion = @Nro_habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+                return db.QueryFirstOrDefault<DateTime>(query, new { Nro_habitacion = Nro_habitacion});
+            }
+        }
+
         //OBTENER HABITACION Y CLIENTES
         public IEnumerable<ReservaClienteDTO> obtenerHabitacionesNormalesYClientes()
         {
@@ -207,7 +218,7 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //ADMIN PUNTO 3
+        //ADMIN PUNTO 2
 
         public int estadoALimpieza(Habitacion habitacion)
         {
@@ -276,6 +287,26 @@ namespace HotelExtrados.Controlador
             {
                 conexion.Open();
                 var dias = conexion.QueryFirstOrDefault<int>("select IdEstado from Habitaciones where Nro_habitacion = @Nro_habitacion", new { id_habitacion = habitacion.Nro_Habitacion});
+                return dias;
+            }
+        }
+
+        //ADMIN PUNTO 3
+
+        public int EstadoHabitacion(Habitacion habitacion)
+        {
+            using (IDbConnection conexion = new SqlConnection(cadenaConexion))
+            {
+                conexion.Open();
+                var dias = conexion.QueryFirstOrDefault<int>("SELECT CASE COUNT (*) " +
+                    "WHEN 0 THEN 0 " +
+                    "WHEN 1 THEN 1 " +
+                    "ELSE '-1' " +
+                    "END AS registros " +
+                    "FROM ClienteXHabitacion c " +
+                    "WHERE c.id_habitacion = @id_habitacion AND " +
+                    "GETDATE() >= (fecha_desde) AND " +
+                    "GETDATE() <= (fecha_hasta)", new { id_habitacion = habitacion.Nro_Habitacion});
                 return dias;
             }
         }
