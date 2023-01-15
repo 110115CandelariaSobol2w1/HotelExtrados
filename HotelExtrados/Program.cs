@@ -158,6 +158,7 @@ namespace HotelExtrados
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Habitaciones comunes");
             Console.ForegroundColor = ConsoleColor.Gray;
+
             IEnumerable<Habitacion> habitaciones = habController.obtenerHabitacionesNormales();
             foreach (Habitacion habitacion in habitaciones)
             {
@@ -210,6 +211,7 @@ namespace HotelExtrados
             Console.WriteLine("///////////////////////////////");
             Console.WriteLine("Habitaciones VIP");
             Console.ForegroundColor = ConsoleColor.Gray;
+
             IEnumerable<Habitacion> habitacionesVip = habController.obtenerHabitacionesVip();
             foreach (Habitacion habitacion in habitacionesVip)
             {
@@ -388,6 +390,7 @@ namespace HotelExtrados
             Reserva nueva = new Reserva();
             ReservaController  controller = new ReservaController();
             ClienteController controllerCliente = new ClienteController();
+            HabitacionController habController = new HabitacionController();
 
             Console.WriteLine("Ingrese el numero de habitacion");
             int nroHabitacion = Convert.ToInt32(Console.ReadLine());
@@ -398,33 +401,45 @@ namespace HotelExtrados
 
             //Deberia verificar si el cliente esta cargado, y si no ir al menu de carga
             bool clienteReserva = controllerCliente.verificarCliente(dniReserva);
-            if (clienteReserva)
+            if (clienteReserva == false)
             {
-
-                Console.WriteLine("Ingrese la fecha de ingreso");
-                nueva.Check_in = Convert.ToDateTime(Console.ReadLine());
-                Console.WriteLine("Ingrese la fecha de salida");
-                nueva.Check_out = Convert.ToDateTime(Console.ReadLine());
-
-                nueva.Estado = 1;
-
-                controller.agregarReserva(nueva);
-
-                //Update para cambiar el estado de la habitacion en la tabla habitaciones
-                controller.CambiarEstadoHabitacion(nroHabitacion);
-
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Reserva realizada con exito");
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
-
-            else
-            {
-
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("ERROR. Cliente no encontrado!!. Primero debe registrar al cliente");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 menuApp();
+     
+            }
+            else 
+            {
+
+                Console.WriteLine("Ingrese la fecha de ingreso");
+                DateTime Check_in = Convert.ToDateTime(Console.ReadLine());
+                nueva.Check_in = Check_in;
+                Console.WriteLine("Ingrese la fecha de salida");
+                DateTime Check_out = Convert.ToDateTime(Console.ReadLine());
+                nueva.Check_out = Check_out;
+
+                bool verificacion = habController.verificarHabitacionFecha(nroHabitacion, Check_in, Check_out);
+
+                if (verificacion == false)
+                {
+                    nueva.Estado = 1;
+
+                    controller.agregarReserva(nueva);
+
+                    //Update para cambiar el estado de la habitacion en la tabla habitaciones
+                    controller.CambiarEstadoHabitacion(nroHabitacion);
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Reserva realizada con exito");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                else if (verificacion)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("La habitacion no se encuentra disponbile en las fechas seleccionadas");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
             }
 
            

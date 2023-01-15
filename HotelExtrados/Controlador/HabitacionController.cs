@@ -36,42 +36,10 @@ namespace HotelExtrados.Controlador
 
         }
 
-        public DateTime obtenerCheckOut(int Nro_habitacion)
-        {
-            string query = "select Check_out from Reserva where Nro_habitacion = @Nro_habitacion";
-
-            using (IDbConnection db = new SqlConnection(cadenaConexion))
-            {
-                db.Open();
-                return db.QueryFirstOrDefault<DateTime>(query, new { Nro_habitacion = Nro_habitacion});
-            }
-        }
-
-        //OBTENER HABITACION Y CLIENTES //creo que no lo estoy usando
-        //public IEnumerable<ReservaClienteDTO> obtenerHabitacionesNormalesYClientes()
-        //{
-
-        //    string query = "select h.IdEstado, r.Check_out " +
-        //        "from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion " +
-        //        "where idTipo = 1";
-
-
-        //    using (IDbConnection db = new SqlConnection(cadenaConexion))
-        //    {
-        //        db.Open();
-        //        var habitacionesComunes = db.Query<ReservaClienteDTO>(query).ToList();
-
-
-        //        return habitacionesComunes;
-        //    }
-
-
-        //}
-
         public IEnumerable<Habitacion> obtenerHabitacionesVip()
         {
 
-            string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje " +
+            string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje, IdEstado " +
                 "from Habitaciones where IdTipo = 2";
 
 
@@ -86,6 +54,17 @@ namespace HotelExtrados.Controlador
 
 
         }
+        public DateTime obtenerCheckOut(int Nro_habitacion)
+        {
+            string query = "select Check_out from Reserva where Nro_habitacion = @Nro_habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+                return db.QueryFirstOrDefault<DateTime>(query, new { Nro_habitacion = Nro_habitacion});
+            }
+        }
+       
         //APP PUNTO 2
         public IEnumerable<Habitacion> obtenerHabitacionesVipDesocupadas()
         {
@@ -388,7 +367,34 @@ namespace HotelExtrados.Controlador
         }
 
 
+        //Verificamos que la habitacion no se encuentre ocupada entre el check in y checkout
 
+        public bool verificarHabitacionFecha(int Nro_habitacion,DateTime Check_in, DateTime Check_out)
+        {
+            string query = "SELECT count(*) from Habitaciones " +
+                "where Nro_habitacion = @Nro_habitacion and Nro_habitacion IN " +
+                "(SELECT Nro_habitacion FROM Reserva WHERE (check_in <= @Check_out AND check_out > @Check_in))";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var count = db.ExecuteScalar<int>(query, new { Nro_habitacion = Nro_habitacion, Check_in = Check_in, Check_out = Check_out });
+
+                if (count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+
+     
+
+        }
 
     }
 }
