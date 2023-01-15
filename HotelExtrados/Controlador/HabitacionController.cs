@@ -47,26 +47,26 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //OBTENER HABITACION Y CLIENTES
-        public IEnumerable<ReservaClienteDTO> obtenerHabitacionesNormalesYClientes()
-        {
+        //OBTENER HABITACION Y CLIENTES //creo que no lo estoy usando
+        //public IEnumerable<ReservaClienteDTO> obtenerHabitacionesNormalesYClientes()
+        //{
 
-            string query = "select h.IdEstado, r.Check_out " +
-                "from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion " +
-                "where idTipo = 1";
-
-
-            using (IDbConnection db = new SqlConnection(cadenaConexion))
-            {
-                db.Open();
-                var habitacionesComunes = db.Query<ReservaClienteDTO>(query).ToList();
+        //    string query = "select h.IdEstado, r.Check_out " +
+        //        "from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion " +
+        //        "where idTipo = 1";
 
 
-                return habitacionesComunes;
-            }
+        //    using (IDbConnection db = new SqlConnection(cadenaConexion))
+        //    {
+        //        db.Open();
+        //        var habitacionesComunes = db.Query<ReservaClienteDTO>(query).ToList();
 
 
-        }
+        //        return habitacionesComunes;
+        //    }
+
+
+        //}
 
         public IEnumerable<Habitacion> obtenerHabitacionesVip()
         {
@@ -125,21 +125,9 @@ namespace HotelExtrados.Controlador
 
         }
 
-        //ADMIN PUNTO 1
-        public int agregarHabitacion(Habitacion habitacion)
-        {
+        //APP PUNTO 3 - ClienteController
 
-            string query = "insert into Habitaciones (Nro_habitacion,IdTipo,Cant_camas,Cochera,Precio,Television,Desayuno,Servicio,Hidromasaje,IdEstado) values (@Nro_habitacion,@IdTipo,@Cant_camas,@Cochera,@Precio,@Television,@Desayuno,@Servicio,@Hidromasaje,@IdEstado)";
-            using (IDbConnection db = new SqlConnection(cadenaConexion))
-            {
-                db.Open();
-
-                var habitacionNueva = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion, IdTipo = habitacion.idTipo,Cant_camas = habitacion.cant_camas, Cochera = habitacion.Cochera,Precio = habitacion.precio,Television = habitacion.television, Desayuno = habitacion.Desayuno, Servicio = habitacion.Servicio, Hidromasaje = habitacion.Hidromasaje, IdEstado = habitacion.idEstado});
-
-                return habitacionNueva;
-
-            }
-        }
+        //APP PUNTO 4 - ReservaController
 
         //APP PUNTO 5
         public IEnumerable<habitacionesDTO> obtenerHabitacionesDesocupadasLimpieza()
@@ -167,7 +155,7 @@ namespace HotelExtrados.Controlador
                 "else null " +
                 "end " +
                 "where Nro_habitacion = @Nro_Habitacion";
-            
+
             using (IDbConnection db = new SqlConnection(cadenaConexion))
             {
                 db.Open();
@@ -179,44 +167,49 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //ADMIN PUNTO 4
-        public IEnumerable<habitacionesDTO> obtenerHabitacionesRenovacion()
-        {
-            string query = "select Nro_habitacion, h.IdEstado, e.Descripcion " +
-               "from habitaciones h join Estado_Habitacion e on h.IdEstado = e.IdEstado " +
-               "where h.IdEstado = 4";
 
+        //-----------------------------------------------------------------------------------------------//
+
+
+        //ADMIN PUNTO 1
+        public int agregarHabitacion(Habitacion habitacion)
+        {
+
+            string query = "insert into Habitaciones (Nro_habitacion,IdTipo,Cant_camas,Cochera,Precio,Television,Desayuno,Servicio,Hidromasaje,IdEstado) values (@Nro_habitacion,@IdTipo,@Cant_camas,@Cochera,@Precio,@Television,@Desayuno,@Servicio,@Hidromasaje,@IdEstado)";
             using (IDbConnection db = new SqlConnection(cadenaConexion))
             {
                 db.Open();
 
-                var habitacionesRenovacion = db.Query<habitacionesDTO>(query).ToList();
+                var habitacionNueva = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion, IdTipo = habitacion.idTipo,Cant_camas = habitacion.cant_camas, Cochera = habitacion.Cochera,Precio = habitacion.precio,Television = habitacion.television, Desayuno = habitacion.Desayuno, Servicio = habitacion.Servicio, Hidromasaje = habitacion.Hidromasaje, IdEstado = habitacion.idEstado});
 
-                return habitacionesRenovacion;
+                return habitacionNueva;
 
             }
         }
 
-        public int RenovacionADisponible(Habitacion habitacion)
+
+        //VERIFICAMOS QUE NO EXISTA EL NUMERO DE CUARTO QUE VAMOS A REGISTRAR
+
+        public bool verificarHabitacion(int Nro_habitacion)
         {
-
-            string query = "update Habitaciones" +
-                " set IdEstado = CASE IdEstado " +
-                "when 4 then 1" +
-                " else null " +
-                "end " +
-                "where Nro_Habitacion = @Nro_habitacion";
-
-            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            using (var connection = new SqlConnection(cadenaConexion))
             {
-                db.Open();
+                string query = "select count(*) from Habitaciones where Nro_habitacion = @Nro_habitacion";
 
-                var estadoNuevo = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion });
 
-                return estadoNuevo;
+                var count = connection.ExecuteScalar<int>(query, new { Nro_habitacion = Nro_habitacion });
 
+                if (count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
+
 
         //ADMIN PUNTO 2
 
@@ -291,47 +284,111 @@ namespace HotelExtrados.Controlador
             }
         }
 
+
         //ADMIN PUNTO 3
 
         public int EstadoHabitacion(Habitacion habitacion)
         {
+            string query = "select count(*) from Reserva" +
+                " where Nro_habitacion = @Nro_habitacion" +
+                " and GETDATE() >= Check_in and GETDATE()<= Check_out";
             using (IDbConnection conexion = new SqlConnection(cadenaConexion))
             {
                 conexion.Open();
-                var dias = conexion.QueryFirstOrDefault<int>("SELECT CASE COUNT (*) " +
-                    "WHEN 0 THEN 0 " +
-                    "WHEN 1 THEN 1 " +
-                    "ELSE '-1' " +
-                    "END AS registros " +
-                    "FROM ClienteXHabitacion c " +
-                    "WHERE c.id_habitacion = @id_habitacion AND " +
-                    "GETDATE() >= (fecha_desde) AND " +
-                    "GETDATE() <= (fecha_hasta)", new { id_habitacion = habitacion.Nro_Habitacion});
-                return dias;
+                var estadoNuevo = conexion.QueryFirstOrDefault<int>(query, new { Nro_habitacion = habitacion.Nro_Habitacion});
+                return estadoNuevo;
             }
         }
 
-        //VERIFICAMOS QUE NO EXISTA EL NUMERO DE CUARTO QUE VAMOS A REGISTRAR
-
-        public bool verificarHabitacion(int Nro_habitacion)
+        public int LimpiezaADisponible(Habitacion habitacion)
         {
-            using (var connection = new SqlConnection(cadenaConexion))
+
+            string query = "UPDATE Habitaciones SET IdEstado = CASE IdEstado " +
+                "WHEN '3' THEN '1'  " +
+                "WHEN '1' THEN '1'" +
+                " WHEN '2' THEN '2'" +
+                " WHEN '4' THEN '4'" +
+                " END WHERE Nro_habitacion = @Nro_habitacion";
+            using (IDbConnection conexion = new SqlConnection(cadenaConexion))
             {
-                string query = "select count(*) from Habitaciones where Nro_habitacion = @Nro_habitacion";
+                conexion.Open();
+                return conexion.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion});
 
-
-                var count = connection.ExecuteScalar<int>(query, new { Nro_habitacion = Nro_habitacion });
-
-                if (count > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
             }
         }
+
+        public int LimpiezaAOcupado(Habitacion habitacion)
+        {
+
+            string query = "UPDATE Habitaciones SET IdEstado = CASE IdEstado " +
+                "WHEN '3' THEN '2'  " +
+                "WHEN '1' THEN '1'" +
+                " WHEN '2' THEN '2'" +
+                " WHEN '4' THEN '4'" +
+                " END WHERE Nro_habitacion = @Nro_habitacion";
+            using (IDbConnection conexion = new SqlConnection(cadenaConexion))
+            {
+                conexion.Open();
+                return conexion.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion });
+
+            }
+        }
+
+        public long obtenerClienteReserva(Habitacion habitacion)
+        {
+            string query = "select dni as 'cliente' " +
+                "from Clientes c join Reserva r on c.Dni = r.Dni_cliente " +
+                "where Nro_habitacion = @Nro_habitacion and GETDATE() between Check_in and Check_out";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+                return db.QueryFirstOrDefault<long>(query, new { Nro_habitacion = habitacion.Nro_Habitacion});
+            }
+        }
+
+
+        //ADMIN PUNTO 4
+        public IEnumerable<habitacionesDTO> obtenerHabitacionesRenovacion()
+        {
+            string query = "select Nro_habitacion, h.IdEstado, e.Descripcion " +
+               "from habitaciones h join Estado_Habitacion e on h.IdEstado = e.IdEstado " +
+               "where h.IdEstado = 4";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var habitacionesRenovacion = db.Query<habitacionesDTO>(query).ToList();
+
+                return habitacionesRenovacion;
+
+            }
+        }
+
+        public int RenovacionADisponible(Habitacion habitacion)
+        {
+
+            string query = "update Habitaciones" +
+                " set IdEstado = CASE IdEstado " +
+                "when 4 then 1" +
+                " else null " +
+                "end " +
+                "where Nro_Habitacion = @Nro_habitacion";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion });
+
+                return estadoNuevo;
+
+            }
+        }
+
+
+
 
     }
 }

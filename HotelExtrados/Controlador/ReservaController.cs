@@ -53,26 +53,7 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //Mostramos las habitaciones disponibles para las fechas seleccionadas.
 
-        //public IEnumerable<Habitacion> obtenerHabitacionesDesocupadasFecha()
-        //{
-
-        //    string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje " +
-        //        "from Habitaciones where IdTipo = 2 and IdEstado = 1";
-
-
-        //    using (IDbConnection db = new SqlConnection(cadenaConexion))
-        //    {
-        //        db.Open();
-        //        var habitacionesVip = db.Query<Habitacion>(query).ToList();
-
-
-        //        return habitacionesVip;
-        //    }
-
-
-        //}
 
 
 

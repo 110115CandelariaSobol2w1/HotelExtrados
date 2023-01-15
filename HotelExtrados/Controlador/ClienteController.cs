@@ -31,21 +31,6 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        //OBTENEMOS TODOS LOS CLIENTES PARA VERIFICAR SI ESTA CARGADO ANTES DE REALIZAR LA RESERVA
-        //public IEnumerable<Cliente> obtenerClientes(long dni)
-        //{
-        //    string query = "select Dni from Clientes where Dni = @Dni";
-
-        //    using (IDbConnection db = new SqlConnection(cadenaConexion))
-        //    {
-        //        db.Open();
-
-        //        var listadoClientes = db.Query<Cliente>(query, new {Dni = dni}).ToList();
-
-        //        return listadoClientes;
-
-        //    }
-        //}
 
         //Verificamos si el cliente existe
         public bool verificarCliente(long Dni)

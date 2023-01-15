@@ -134,7 +134,7 @@ namespace HotelExtrados
                         break;
                     case 3:
                         Console.WriteLine("Has elegido la opción 3");
-                        //llamamos a la funcion que vuelve al estado anterior
+                        volverEstadoAnterior();
                         break;
                     case 4:
                         Console.WriteLine("Has elegido la opción 4");
@@ -244,13 +244,20 @@ namespace HotelExtrados
                 {
                     Console.WriteLine("Hidromasaje: No posee");
                 }
+
+                if (habitacion.idEstado == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    DateTime checkOut = habController.obtenerCheckOut(habitacion.Nro_Habitacion);
+                    Console.WriteLine("La habitacion se encuenta ocupada hasta el dia {0}", checkOut);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
                 Console.WriteLine("----------------------------------------------");
 
             }
 
 
         }
-
 
         public static void getHabitacionesDesocupadas()
         {
@@ -628,6 +635,35 @@ namespace HotelExtrados
             }
 
            
+        }
+
+        public static void volverEstadoAnterior()
+        {
+            HabitacionController controller = new HabitacionController();
+            Habitacion habitacion = new Habitacion();
+
+            Console.WriteLine("Ingrese el Nro de habitacion que desea modificar el estado");
+            int nroHabitacion = Convert.ToInt32(Console.ReadLine());
+            habitacion.Nro_Habitacion = nroHabitacion;
+
+           int estadoHabitacion =  controller.EstadoHabitacion(habitacion);
+
+            if(estadoHabitacion == 1)
+            {
+                controller.LimpiezaAOcupado(habitacion);
+                long dniCliente = controller.obtenerClienteReserva(habitacion);
+                Console.WriteLine("La habitacion se encuentra ocupada para el cliente cuyo dni es:  {0}" , dniCliente);
+            }
+            else if(estadoHabitacion == 0)
+            {
+                controller.LimpiezaADisponible(habitacion);
+                
+                Console.WriteLine("La habitacion se encuentra disponbile");
+            }
+            else
+            {
+                Console.WriteLine("Error");
+            }
         }
 
 
