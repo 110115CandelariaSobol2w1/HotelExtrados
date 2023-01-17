@@ -396,5 +396,40 @@ namespace HotelExtrados.Controlador
 
         }
 
+        //Actualizamos el estado de la habitacion segun las reservas
+
+        public int estadadoOcupada()
+        {
+            string query = "update habitaciones set IdEstado = 2" +
+                " from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion" +
+                " where GETDATE() between Check_in and Check_out and Estado = 1";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query);
+
+                return estadoNuevo;
+
+            }
+        }
+
+        public int estadadoDesocupada()
+        {
+            string query = "update habitaciones set IdEstado = 1" +
+                " from habitaciones h join Reserva r on h.Nro_habitacion = r.Nro_habitacion " +
+                "where GETDATE() < Check_in or GETDATE() > Check_out";
+
+            using (IDbConnection db = new SqlConnection(cadenaConexion))
+            {
+                db.Open();
+
+                var estadoNuevo = db.Execute(query);
+
+                return estadoNuevo;
+
+            }
+        }
     }
 }

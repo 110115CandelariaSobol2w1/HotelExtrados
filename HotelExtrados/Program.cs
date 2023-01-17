@@ -15,7 +15,9 @@ namespace HotelExtrados
 
         static void Main(string[] args)
         {
-
+            HabitacionController controller = new HabitacionController();
+            controller.estadadoDesocupada();
+            controller.estadadoOcupada();
             login();
         }
 
@@ -662,22 +664,25 @@ namespace HotelExtrados
             habitacion.Nro_Habitacion = nroHabitacion;
 
            int estadoHabitacion =  controller.EstadoHabitacion(habitacion);
+           bool habitacionExiste = controller.verificarHabitacion(nroHabitacion);
 
-            if(estadoHabitacion == 1)
+            if(habitacionExiste && estadoHabitacion == 1)
             {
                 controller.LimpiezaAOcupado(habitacion);
                 long dniCliente = controller.obtenerClienteReserva(habitacion);
                 Console.WriteLine("La habitacion se encuentra ocupada para el cliente cuyo dni es:  {0}" , dniCliente);
             }
-            else if(estadoHabitacion == 0)
+            else if(habitacionExiste && estadoHabitacion == 0)
             {
                 controller.LimpiezaADisponible(habitacion);
                 
                 Console.WriteLine("La habitacion se encuentra disponbile");
             }
-            else
+            else if(habitacionExiste == false)
             {
-                Console.WriteLine("Error");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Error. El numero de habitacion ingresado es incorrecto");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 
