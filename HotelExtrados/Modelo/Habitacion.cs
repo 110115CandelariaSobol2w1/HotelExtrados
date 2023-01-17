@@ -16,8 +16,8 @@ namespace HotelExtrados.Modelo
         public float precio { get; set; }
         public bool television { get; set; }
         public bool Desayuno { get; set; }
-        public bool Servicio { get; set; }
-        public bool Hidromasaje { get; set; }   
+        //public bool Servicio { get; set; }
+        //public bool Hidromasaje { get; set; }   
         public int idEstado { get; set; }
 
   

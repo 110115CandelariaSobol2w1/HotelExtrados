@@ -214,8 +214,8 @@ namespace HotelExtrados
             Console.WriteLine("Habitaciones VIP");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            IEnumerable<Habitacion> habitacionesVip = habController.obtenerHabitacionesVip();
-            foreach (Habitacion habitacion in habitacionesVip)
+            IEnumerable<HabitacionVip> habitacionesVip = habController.obtenerHabitacionesVip();
+            foreach (HabitacionVip habitacion in habitacionesVip)
             {
                 Console.WriteLine("----------------------------------------------");
                 Console.WriteLine("El nro de habitacion es: " + habitacion.Nro_Habitacion);
@@ -314,8 +314,8 @@ namespace HotelExtrados
             Console.WriteLine("///////////////////////////////");
             Console.WriteLine("Habitaciones VIP");
             Console.ForegroundColor = ConsoleColor.Gray;
-            IEnumerable<Habitacion> habitacionesVip = habController.obtenerHabitacionesVipDesocupadas();
-            foreach (Habitacion habitacion in habitacionesVip)
+            IEnumerable<HabitacionVip> habitacionesVip = habController.obtenerHabitacionesVipDesocupadas();
+            foreach (HabitacionVip habitacion in habitacionesVip)
             {
                 Console.WriteLine("----------------------------------------------");
                 Console.WriteLine("El nro de habitacion es: " + habitacion.Nro_Habitacion);
@@ -451,7 +451,7 @@ namespace HotelExtrados
         public static void agregarHabitacion()
         {
             HabitacionController controller = new HabitacionController();
-            Habitacion nueva = new Habitacion();
+            HabitacionVip nueva = new HabitacionVip();
 
             Console.WriteLine("Ingrese el numero de habitacion");
             int nroHabitacion = Convert.ToInt32(Console.ReadLine());

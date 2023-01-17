@@ -73,6 +73,7 @@
     <Compile Include="Modelo\Cliente.cs" />
     <Compile Include="Modelo\EstadoHabitacion.cs" />
     <Compile Include="Modelo\Habitacion.cs" />
+    <Compile Include="Modelo\HabitacionVip.cs" />
     <Compile Include="Modelo\Reserva.cs" />
     <Compile Include="Modelo\Rol.cs" />
     <Compile Include="Modelo\TipoHabitacion.cs" />

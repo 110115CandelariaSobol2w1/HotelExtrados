@@ -36,7 +36,7 @@ namespace HotelExtrados.Controlador
 
         }
 
-        public IEnumerable<Habitacion> obtenerHabitacionesVip()
+        public IEnumerable<HabitacionVip> obtenerHabitacionesVip()
         {
 
             string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje, IdEstado " +
@@ -46,7 +46,7 @@ namespace HotelExtrados.Controlador
             using (IDbConnection db = new SqlConnection(cadenaConexion))
             {
                 db.Open();
-                var habitacionesVip = db.Query<Habitacion>(query).ToList();
+                var habitacionesVip = db.Query<HabitacionVip>(query).ToList();
 
 
                 return habitacionesVip;
@@ -66,7 +66,7 @@ namespace HotelExtrados.Controlador
         }
        
         //APP PUNTO 2
-        public IEnumerable<Habitacion> obtenerHabitacionesVipDesocupadas()
+        public IEnumerable<HabitacionVip> obtenerHabitacionesVipDesocupadas()
         {
 
             string query = "select Nro_Habitacion, Cant_camas,Cochera,Precio,Servicio,Hidromasaje " +
@@ -76,7 +76,7 @@ namespace HotelExtrados.Controlador
             using (IDbConnection db = new SqlConnection(cadenaConexion))
             {
                 db.Open();
-                var habitacionesVip = db.Query<Habitacion>(query).ToList();
+                var habitacionesVip = db.Query<HabitacionVip>(query).ToList();
 
 
                 return habitacionesVip;
@@ -151,7 +151,7 @@ namespace HotelExtrados.Controlador
 
 
         //ADMIN PUNTO 1
-        public int agregarHabitacion(Habitacion habitacion)
+        public int agregarHabitacion(HabitacionVip habitacion)
         {
 
             string query = "insert into Habitaciones (Nro_habitacion,IdTipo,Cant_camas,Cochera,Precio,Television,Desayuno,Servicio,Hidromasaje,IdEstado) values (@Nro_habitacion,@IdTipo,@Cant_camas,@Cochera,@Precio,@Television,@Desayuno,@Servicio,@Hidromasaje,@IdEstado)";
