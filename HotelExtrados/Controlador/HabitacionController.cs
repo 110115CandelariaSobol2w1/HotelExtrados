@@ -234,7 +234,7 @@ namespace HotelExtrados.Controlador
             }
         }
 
-        public int cancelarReserva(Reserva reserva)
+        public int cancelarReserva(Habitacion habitacion)
         {
             string query = "update Reserva set Estado = CASE Estado " +
                 "when 1 then 0 " +
@@ -246,7 +246,7 @@ namespace HotelExtrados.Controlador
             {
                 db.Open();
 
-                var estadoNuevo = db.Execute(query, new { Nro_habitacion = reserva.Nro_habitacion});
+                var estadoNuevo = db.Execute(query, new { Nro_habitacion = habitacion.Nro_Habitacion});
 
                 return estadoNuevo;
 
@@ -255,11 +255,12 @@ namespace HotelExtrados.Controlador
 
         public int ObtenerEstadoHabitacion(Habitacion habitacion)
         {
+            string query = "select IdEstado from Habitaciones where Nro_habitacion = @Nro_habitacion";
             using (IDbConnection conexion = new SqlConnection(cadenaConexion))
             {
                 conexion.Open();
-                var dias = conexion.QueryFirstOrDefault<int>("select IdEstado from Habitaciones where Nro_habitacion = @Nro_habitacion", new { id_habitacion = habitacion.Nro_Habitacion});
-                return dias;
+                var estado = conexion.QueryFirstOrDefault<int>(query, new { Nro_habitacion = habitacion.Nro_Habitacion});
+                return estado;
             }
         }
 

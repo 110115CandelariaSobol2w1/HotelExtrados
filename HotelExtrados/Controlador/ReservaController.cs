@@ -53,6 +53,18 @@ namespace HotelExtrados.Controlador
             }
         }
 
+        public int estadoReserva(int Nro_habitacion)
+        {
+
+            string query = "select Estado from Reserva where Nro_habitacion = @Nro_habitacion";
+            using (IDbConnection conexion = new SqlConnection(cadenaConexion))
+            {
+                conexion.Open();
+                var estado = conexion.QueryFirstOrDefault<int>(query, new { Nro_habitacion = Nro_habitacion});
+                return estado;
+            }
+        }
+
 
 
 
